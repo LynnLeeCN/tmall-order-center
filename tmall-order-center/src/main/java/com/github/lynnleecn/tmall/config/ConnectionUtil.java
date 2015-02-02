@@ -10,6 +10,7 @@ import java.security.MessageDigest;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * TaoBao Default utility for signature and transmission
@@ -18,6 +19,13 @@ import java.util.TreeMap;
  *
  */
 public class ConnectionUtil {
+
+	/**
+	 * TODO temporary store the session key(token). You can store it by
+	 * file/database or other persistence
+	 */
+
+	private static final Map<String, String> userToken = new ConcurrentHashMap<String, String>();
 
 	/**
 	 * 新的md5签名，首尾放secret。
@@ -39,14 +47,18 @@ public class ConnectionUtil {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * TODO:Acquire access token by callback
 	 * 
 	 * @return token
 	 */
-	public static String getToken(){
-		return "";
+	public static String getToken(String user) {
+		return userToken.get(user);
+	}
+
+	public static void setToken(String user, String token) {
+		userToken.put(user, token);
 	}
 
 	/** 连接到TOP服务器并获取数据 */

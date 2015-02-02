@@ -31,7 +31,21 @@ public class Constants {
 
 	/** 授权地址 */
 	public static final String PRODUCT_CONTAINER_URL = "http://container.open.taobao.com/container";
-
+	
+	/** OAuth认证地址 */
+	public static final String OAUTH_URL = "https://oauth.taobao.com/authorize";
+	
+	/** 获取访问令牌地址 */
+	public static final String TOKEN_URL = "https://oauth.taobao.com/token";
+	
+	/* OAuth认证地址 (沙箱)*/
+	public static final String OAUTH_SANDBOX_URL = "https://oauth.tbsandbox.com/authorize";
+	
+	/* 获取访问令牌地址（沙箱） */
+	public static final String TOKEN_SANDBOX_URL = "https://oauth.tbsandbox.com/token";
+	
+	
+	
 	/** SDK版本号 */
 	public static final String SDK_VERSION = "top-sdk-java-20141202";
 

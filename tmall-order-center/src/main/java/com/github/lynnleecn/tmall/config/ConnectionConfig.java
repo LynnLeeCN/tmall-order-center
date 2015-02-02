@@ -63,16 +63,15 @@ public class ConnectionConfig {
 	/*
 	 * configure properties file path
 	 */
-	private static final String PATH = "connection.properties";
+	private static final String PATH = "com/github/lynnleecn/tmall/config/connection.properties";
 
-	private static final String serverUrl;
+	public static final String appServer;
 
-	private static final String appKey;
+	public static final String tmallServer;
 
-	private static final String appSecret;
+	public static final String appKey;
 
-	// TODO callback function
-	private static String token;
+	public static final String appSecret;
 
 	static {
 
@@ -85,28 +84,42 @@ public class ConnectionConfig {
 			throw new RuntimeException(e.getMessage());
 		}
 
-		serverUrl = properties.getProperty("serverUrl");
+		appServer = properties.getProperty("appServer");
+		tmallServer = properties.getProperty("tmallServer");
 		appKey = properties.getProperty("appKey");
 		appSecret = properties.getProperty("appSecret");
 
 	}
 
-	public static String getResponse(String apiName, TreeMap<String, String> params) {
-		return getResponse(apiName, params, Constants.FORMAT_JSON);
+	/**
+	 * Acquire API JSON result
+	 * 
+	 * @param user
+	 *            TaoBao/Tmall user
+	 * @param apiName
+	 *            TaoBao API name(eg. taobao.trades.sold.get)
+	 * @param params
+	 *            contains key&value
+	 * @return
+	 */
+	public static String getResponse(String user, String apiName, TreeMap<String, String> params) {
+		return getResponse(user, apiName, params, Constants.FORMAT_JSON);
 	}
 
 	/**
 	 * Acquire API result
 	 * 
+	 * @param user
+	 *            TaoBao/Tmall user
 	 * @param apiName
-	 *            Taobao API name(eg. taobao.trades.sold.get)
+	 *            TaoBao API name(eg. taobao.trades.sold.get)
 	 * @param params
 	 *            contains key&value
 	 * @param format
 	 *            json/xml
 	 * @return API result format by json/xml
 	 */
-	public static String getResponse(String apiName, TreeMap<String, String> params, String format) {
+	public static String getResponse(String user, String apiName, TreeMap<String, String> params, String format) {
 
 		// Basic parameters
 		params.put(SIGN_METHOD, Constants.SIGN_METHOD_MD5);
@@ -117,7 +130,7 @@ public class ConnectionConfig {
 		params.put(TIMESTAMP, DateFormatUtils.format(new Date(), Constants.DATE_TIME_FORMAT));
 		// Authentication
 		params.put(APP_KEY, appKey);
-		params.put(SESSION, ConnectionUtil.getToken());
+		params.put(SESSION, ConnectionUtil.getToken(user));
 		params.put(SIGN, ConnectionUtil.md5Signature(params, appSecret));
 		// construct HTTP request parameter
 		StringBuffer httpParamBuff = new StringBuffer();
@@ -127,7 +140,7 @@ public class ConnectionConfig {
 		}
 		String httpParam = httpParamBuff.toString().substring(1);
 
-		String response = ConnectionUtil.getResult(serverUrl, httpParam);
+		String response = ConnectionUtil.getResult(tmallServer, httpParam);
 
 		return response;
 	}
